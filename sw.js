@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sandlicias-v1';
+const CACHE_NAME = 'sandlicias-v2';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -33,24 +33,32 @@ self.addEventListener('activate', (event) => {
 });
 
 // Cache-first for app shell, network-first fallback for everything else (still cached for offline use)
+function putInCache(request, response) {
+  if (response && response.status === 200 && response.type === 'basic') {
+    caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+  }
+  return response;
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  // Page navigations: try the network first so updates show up right away;
+  // fall back to the cached app shell when offline.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => putInCache(event.request, response))
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Static assets: cache-first for speed and offline use, refreshed in the background.
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && response.type === 'basic') {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => {
-          if (event.request.mode === 'navigate') return caches.match('./index.html');
-        });
+      const network = fetch(event.request).then((response) => putInCache(event.request, response)).catch(() => null);
+      return cached || network;
     })
   );
 });
