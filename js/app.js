@@ -90,8 +90,18 @@
   const topbarSubtitle = document.getElementById('topbar-subtitle');
   const fab = document.getElementById('fab-new');
   const navItems = document.querySelectorAll('.nav-item');
+  const btnBack = document.getElementById('btn-back');
+  const brandBlock = document.getElementById('brand-block');
   const ROUTES_WITH_NAV = ['inicio', 'pedidos', 'calendario', 'ajustes'];
   const ROUTES_WITH_FAB = ['inicio', 'pedidos', 'calendario'];
+
+  // Dónde debe llevar el botón "Regresar" según la pantalla actual
+  function backTargetFor(route, param) {
+    if (route === 'pedido') return ['pedidos'];
+    if (route === 'editar-pedido') return ['pedido', param];
+    if (route === 'nuevo-pedido') return ['inicio'];
+    return ['inicio'];
+  }
 
   // ---------------------------------------------------------
   // Router
@@ -111,12 +121,22 @@
     const known = ['inicio', 'pedidos', 'calendario', 'ajustes', 'nuevo-pedido', 'editar-pedido', 'pedido'];
     if (!known.includes(route)) { navigate('inicio'); return; }
 
-    document.getElementById('bottom-nav').style.display = ROUTES_WITH_NAV.includes(route) ? '' : 'none';
+    const showChrome = ROUTES_WITH_NAV.includes(route);
+    document.getElementById('bottom-nav').style.display = showChrome ? '' : 'none';
     fab.style.display = ROUTES_WITH_FAB.includes(route) ? '' : 'none';
     navItems.forEach((btn) => {
       if (btn.dataset.route === route) btn.setAttribute('aria-current', 'page');
       else btn.removeAttribute('aria-current');
     });
+
+    // En pantallas sin barra inferior (detalle, nuevo/editar pedido) mostramos
+    // un botón de regreso en la barra superior para no dejar a la usuaria atrapada.
+    btnBack.hidden = showChrome;
+    brandBlock.hidden = !showChrome;
+    if (!showChrome) {
+      const [backRoute, backParam] = backTargetFor(route, param);
+      btnBack.onclick = () => navigate(backRoute, backParam);
+    }
 
     viewRoot.innerHTML = '';
     topbarTitle.textContent = '';
