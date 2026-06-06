@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgm" cx="38%" cy="32%" r="85%">
+      <stop offset="0%" stop-color="#FFE3EE"/>
+      <stop offset="55%" stop-color="#F7B8D2"/>
+      <stop offset="100%" stop-color="#E8A0BE"/>
+    </radialGradient>
+    <linearGradient id="cupm" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FBEFF4"/>
+    </linearGradient>
+    <linearGradient id="swirlm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8617A"/>
+      <stop offset="100%" stop-color="#8C4A66"/>
+    </linearGradient>
+  </defs>
+
+  <!-- full-bleed background (maskable safe area) -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#bgm)"/>
+
+  <!-- decorative blossom accents -->
+  <g opacity="0.45" fill="#FFFFFF">
+    <circle cx="108" cy="138" r="5"/>
+    <circle cx="92" cy="158" r="3.4"/>
+    <circle cx="404" cy="112" r="4.4"/>
+    <circle cx="120" cy="392" r="4"/>
+    <circle cx="396" cy="382" r="5.2"/>
+  </g>
+
+  <!-- cupcake liner / base (scaled ~1.08, centered in safe zone) -->
+  <path d="M191 322
+           C191 311 200 303 211 303
+           L301 303
+           C312 303 321 311 321 322
+           L308 400
+           C307 413 296 422 283 422
+           L229 422
+           C216 422 205 413 204 400
+           Z"
+        fill="url(#cupm)" stroke="#A8617A" stroke-width="5" stroke-linejoin="round"/>
+  <g stroke="#D79CB3" stroke-width="3.6" stroke-linecap="round" opacity="0.8">
+    <path d="M218 314 L214 414"/>
+    <path d="M248 310 L246 418"/>
+    <path d="M278 310 L282 418"/>
+    <path d="M304 314 L298 414"/>
+  </g>
+
+  <!-- frosting swirl -->
+  <path d="M174 303
+           C163 268 183 242 215 238
+           C202 221 211 195 239 191
+           C235 169 257 150 285 161
+           C304 142 339 151 345 181
+           C371 187 382 215 365 238
+           C384 255 382 287 357 303
+           Z"
+        fill="url(#cupm)" stroke="#A8617A" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- swirl flourish -->
+  <path d="M256 191
+           C243 163 258 142 281 144
+           C268 129 277 105 303 107
+           C294 90 307 68 333 73
+           C327 58 342 43 361 52
+           C376 59 378 80 363 91"
+        fill="none" stroke="url(#swirlm)" stroke-width="9.5" stroke-linecap="round"/>
+  <circle cx="363" cy="91" r="7.4" fill="url(#swirlm)"/>
+
+  <g fill="#E98AAE">
+    <path d="M223 222c-3-5-11-5-13 1-2 6 4 11 13 18 9-7 15-12 13-18-2-6-10-6-13-1z"/>
+    <path d="M298 203c-3-5-10-5-12 1-2 6 4 10 12 17 8-7 14-11 12-17-2-6-9-6-12-1z"/>
+  </g>
+</svg>

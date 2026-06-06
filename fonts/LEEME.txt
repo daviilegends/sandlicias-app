@@ -1,0 +1,9 @@
+Coloca aquí los archivos de la fuente "Magic MSP" para que la app la use
+en encabezados y en el logotipo de la marca:
+
+  fonts/MagicMSP.woff2   (preferido — más ligero)
+  fonts/MagicMSP.otf     (alternativo)
+
+Si no agregas estos archivos, la app funciona igual: usa automáticamente
+una alternativa elegante (Playfair Display / Georgia) definida en
+css/styles.css (regla @font-face de 'Magic MSP').

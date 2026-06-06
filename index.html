@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Sand'licias Repostería · Pedidos</title>
+<meta name="description" content="Gestión de pedidos de pasteles, cupcakes y postres para Sand'licias Repostería: fechas de entrega, pagos y clientes en un solo lugar.">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F8C9DC">
+<meta name="background-color" content="#FFF8F2">
+
+<!-- iOS install support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sand'licias">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-startup-image" href="icons/splash-512.png">
+
+<!-- Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+<link rel="mask-icon" href="icons/logo-mark.svg" color="#F8C9DC">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Splash (visible until app boots) -->
+<div id="splash" class="splash" aria-hidden="true">
+  <img src="icons/icon-512.png" alt="" class="splash-mark">
+  <p class="splash-word">Sand'licias <span>Repostería</span></p>
+  <p class="splash-tag">endulzando momentos</p>
+</div>
+
+<div class="app-shell" id="app" hidden>
+
+  <!-- Top bar: content swapped per screen -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <img src="icons/icon-512.png" alt="" class="brand-mark">
+        <div class="brand-text">
+          <span class="brand-name">Sand'licias</span>
+          <span class="brand-sub">Repostería</span>
+        </div>
+      </div>
+      <button class="icon-btn" id="btn-notifications" aria-label="Avisos" aria-haspopup="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 22a2.4 2.4 0 0 0 2.4-2.4h-4.8A2.4 2.4 0 0 0 12 22Zm7.2-6V11a7.2 7.2 0 0 0-5.7-7.04V3a1.5 1.5 0 0 0-3 0v.96A7.2 7.2 0 0 0 4.8 11v5l-1.8 1.8v.9h18v-.9Z" fill="currentColor"/></svg>
+        <span class="notif-dot" id="notif-dot" hidden></span>
+      </button>
+    </div>
+    <h1 class="topbar-title" id="topbar-title"></h1>
+    <p class="topbar-subtitle" id="topbar-subtitle"></p>
+  </header>
+
+  <!-- Notifications drawer -->
+  <div class="sheet-backdrop" id="notif-backdrop" hidden></div>
+  <aside class="notif-sheet" id="notif-sheet" hidden aria-label="Avisos y recordatorios">
+    <div class="sheet-handle"></div>
+    <h2 class="sheet-title">Avisos</h2>
+    <div id="notif-list" class="notif-list"></div>
+    <button class="btn btn-ghost" id="btn-close-notif">Cerrar</button>
+  </aside>
+
+  <!-- Main view area: views are rendered here by app.js -->
+  <main id="view" class="view" tabindex="-1"></main>
+
+  <!-- Floating action button -->
+  <button class="fab" id="fab-new" aria-label="Crear nuevo pedido">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6Z" fill="currentColor"/></svg>
+  </button>
+
+  <!-- Bottom navigation -->
+  <nav class="bottom-nav" id="bottom-nav" aria-label="Navegación principal">
+    <button class="nav-item" data-route="inicio" aria-current="page">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3 2 11h2v9h6v-6h4v6h6v-9h2Z" fill="currentColor"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" data-route="pedidos">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 2h9l4 4v16H6Zm9 1.5V7h3.5ZM8 12h8v1.6H8Zm0 3.4h8V17H8ZM8 8.6h5v1.6H8Z" fill="currentColor"/></svg>
+      <span>Pedidos</span>
+    </button>
+    <span class="nav-spacer" aria-hidden="true"></span>
+    <button class="nav-item" data-route="calendario">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3Zm-1 7v9h12V9Zm2 3h3v3H8Z" fill="currentColor"/></svg>
+      <span>Calendario</span>
+    </button>
+    <button class="nav-item" data-route="ajustes">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m19.4 13-.1-1-.1-1 1.6-1.5-1.5-2.6-2.1.6-1.7-1-.5-2.1h-3l-.5 2.1-1.7 1-2.1-.6-1.5 2.6L7.2 11l-.1 1 .1 1-1.6 1.5 1.5 2.6 2.1-.6 1.7 1 .5 2.1h3l.5-2.1 1.7-1 2.1.6 1.5-2.6Zm-7.4 2.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z" fill="currentColor"/></svg>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Toasts -->
+<div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+<!-- ============ View templates (cloned by app.js) ============ -->
+
+<template id="tpl-inicio">
+  <section class="view-pad">
+    <div class="stat-grid" id="stat-grid"></div>
+
+    <div class="section-head">
+      <h2>Entregas de hoy</h2>
+    </div>
+    <div id="hoy-list" class="card-list"></div>
+
+    <div class="section-head">
+      <h2>Próximas entregas</h2>
+      <button class="link-btn" data-go="pedidos">Ver todas</button>
+    </div>
+    <div id="proximas-list" class="card-list"></div>
+  </section>
+</template>
+
+<template id="tpl-pedidos">
+  <section class="view-pad">
+    <div class="search-row">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m21 21-4.35-4.35m1.35-5.15a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <input type="search" id="search-input" placeholder="Buscar por nombre, teléfono o sabor…" aria-label="Buscar pedidos">
+      </div>
+      <button class="icon-btn icon-btn-soft" id="btn-sort" aria-label="Ordenar">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 6h12M3 12h8M3 18h4M17 4v16m0 0-3-3m3 3 3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="chip-row" id="type-chips"></div>
+    <div class="chip-row" id="status-chips"></div>
+    <p class="result-count" id="result-count"></p>
+    <div id="orders-list" class="card-list"></div>
+  </section>
+</template>
+
+<template id="tpl-calendario">
+  <section class="view-pad">
+    <div class="cal-head">
+      <button class="icon-btn icon-btn-soft" id="cal-prev" aria-label="Mes anterior">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2 id="cal-month-label"></h2>
+      <button class="icon-btn icon-btn-soft" id="cal-next" aria-label="Mes siguiente">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="cal-weekdays">
+      <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <span><i class="dot dot-green"></i> +7 días</span>
+      <span><i class="dot dot-yellow"></i> 3–7 días</span>
+      <span><i class="dot dot-orange"></i> 1–2 días</span>
+      <span><i class="dot dot-red"></i> Hoy / vencido</span>
+    </div>
+    <div class="section-head">
+      <h2 id="cal-day-title">Selecciona un día</h2>
+    </div>
+    <div id="cal-day-list" class="card-list"></div>
+  </section>
+</template>
+
+<template id="tpl-nuevo-pedido">
+  <section class="view-pad form-view">
+    <form id="order-form" novalidate>
+      <input type="hidden" id="f-id" name="id">
+
+      <h2 class="form-section-title">Datos del cliente</h2>
+      <label class="field">
+        <span>Nombre del cliente <em>*</em></span>
+        <input type="text" id="f-nombre" name="nombre" required placeholder="Ej. María Hernández" autocomplete="name">
+      </label>
+      <label class="field">
+        <span>Teléfono <small>(opcional)</small></span>
+        <input type="tel" id="f-telefono" name="telefono" placeholder="Ej. 55 1234 5678" autocomplete="tel" inputmode="tel">
+      </label>
+
+      <h2 class="form-section-title">Detalles del producto</h2>
+      <label class="field">
+        <span>Tipo de pedido <em>*</em></span>
+        <div class="seg-control" id="tipo-control" role="radiogroup" aria-label="Tipo de pedido">
+          <button type="button" class="seg-btn" data-value="Pastel">🎂 Pastel</button>
+          <button type="button" class="seg-btn" data-value="Cupcakes">🧁 Cupcakes</button>
+          <button type="button" class="seg-btn" data-value="Postre">🍰 Postre</button>
+          <button type="button" class="seg-btn" data-value="Otro">✨ Otro</button>
+        </div>
+        <input type="hidden" id="f-tipo" name="tipo" required>
+      </label>
+
+      <label class="field">
+        <span>Sabor del bizcocho</span>
+        <select id="f-sabor" name="sabor">
+          <option value="">Selecciona un sabor…</option>
+          <option>Chocolate</option>
+          <option>Vainilla</option>
+          <option>Red velvet</option>
+          <option>Plátano</option>
+          <option>Marmoleado</option>
+          <option>Zanahoria</option>
+          <option value="Otro">Otro (especificar en notas)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Relleno</span>
+        <select id="f-relleno" name="relleno">
+          <option value="">Selecciona un relleno…</option>
+          <option>Queso crema</option>
+          <option>Mousse de Nutella</option>
+          <option>Cajeta</option>
+          <option>Cookies & cream</option>
+          <option>Nutella</option>
+          <option>Dulce de leche</option>
+          <option>Crema pastelera</option>
+          <option>Mermelada</option>
+          <option value="Otro">Otro (especificar en notas)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Tamaño / porciones</span>
+        <select id="f-tamano" name="tamano">
+          <option value="">Selecciona un tamaño…</option>
+          <option>10 cm — 1 porción</option>
+          <option>12 cm — 2 porciones</option>
+          <option>14 cm — 4 porciones</option>
+          <option>16 cm — 6 a 8 porciones</option>
+          <option>18 cm — 10 a 12 porciones</option>
+          <option>20 cm — 16 a 18 porciones</option>
+          <option>22 cm — 20 a 24 porciones</option>
+          <option>+30 cm — 45 a 50 porciones</option>
+          <option value="Otro">Otro (especificar en notas)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Notas / personalización</span>
+        <textarea id="f-notas" name="notas" rows="3" placeholder="Diseño, colores, texto en el pastel, alergias, etc."></textarea>
+      </label>
+
+      <h2 class="form-section-title">Entrega</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Fecha de entrega <em>*</em></span>
+          <input type="date" id="f-fecha" name="fecha" required>
+        </label>
+        <label class="field">
+          <span>Hora de entrega</span>
+          <input type="time" id="f-hora" name="hora">
+        </label>
+      </div>
+      <label class="field">
+        <span>Forma de entrega</span>
+        <div class="seg-control" id="entrega-control" role="radiogroup" aria-label="Forma de entrega">
+          <button type="button" class="seg-btn" data-value="Recoger">🏠 Recoge cliente</button>
+          <button type="button" class="seg-btn" data-value="Domicilio">🚗 A domicilio</button>
+        </div>
+        <input type="hidden" id="f-entrega" name="entrega" value="Recoger">
+      </label>
+      <label class="field" id="direccion-field" hidden>
+        <span>Dirección de entrega</span>
+        <input type="text" id="f-direccion" name="direccion" placeholder="Calle, número, colonia, referencias">
+      </label>
+
+      <h2 class="form-section-title">Pago</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Precio total <em>*</em></span>
+          <input type="number" id="f-precio" name="precio" min="0" step="0.01" inputmode="decimal" placeholder="0.00" required>
+        </label>
+        <label class="field">
+          <span>Anticipo recibido</span>
+          <input type="number" id="f-anticipo" name="anticipo" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+        </label>
+      </div>
+      <p class="balance-preview" id="balance-preview"></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="btn-save-order">Guardar pedido</button>
+        <button type="button" class="btn btn-ghost" id="btn-cancel-order">Cancelar</button>
+      </div>
+      <button type="button" class="btn btn-text-danger" id="btn-delete-order" hidden>Eliminar pedido</button>
+    </form>
+  </section>
+</template>
+
+<template id="tpl-detalle-pedido">
+  <section class="view-pad detail-view">
+    <div class="urgency-banner" id="detail-urgency"></div>
+
+    <div class="detail-card">
+      <h3 class="detail-card-title">Cliente</h3>
+      <dl class="detail-list">
+        <div><dt>Nombre</dt><dd id="d-nombre"></dd></div>
+        <div><dt>Teléfono</dt><dd id="d-telefono"></dd></div>
+      </dl>
+      <a class="btn btn-soft btn-small" id="d-call-link" hidden>📞 Llamar</a>
+      <a class="btn btn-soft btn-small" id="d-whatsapp-link" hidden>💬 WhatsApp</a>
+    </div>
+
+    <div class="detail-card">
+      <h3 class="detail-card-title">Producto</h3>
+      <dl class="detail-list">
+        <div><dt>Tipo</dt><dd id="d-tipo"></dd></div>
+        <div><dt>Sabor</dt><dd id="d-sabor"></dd></div>
+        <div><dt>Relleno</dt><dd id="d-relleno"></dd></div>
+        <div><dt>Tamaño</dt><dd id="d-tamano"></dd></div>
+      </dl>
+    </div>
+
+    <div class="detail-card">
+      <h3 class="detail-card-title">Entrega</h3>
+      <dl class="detail-list">
+        <div><dt>Fecha</dt><dd id="d-fecha"></dd></div>
+        <div><dt>Hora</dt><dd id="d-hora"></dd></div>
+        <div><dt>Forma</dt><dd id="d-entrega"></dd></div>
+        <div id="d-direccion-row"><dt>Dirección</dt><dd id="d-direccion"></dd></div>
+      </dl>
+    </div>
+
+    <div class="detail-card">
+      <h3 class="detail-card-title">Pago</h3>
+      <dl class="detail-list">
+        <div><dt>Precio total</dt><dd id="d-precio"></dd></div>
+        <div><dt>Anticipo</dt><dd id="d-anticipo"></dd></div>
+        <div><dt>Saldo pendiente</dt><dd id="d-saldo" class="dd-strong"></dd></div>
+      </dl>
+      <span class="badge" id="d-pago-badge"></span>
+    </div>
+
+    <div class="detail-card" id="d-notas-card">
+      <h3 class="detail-card-title">Notas</h3>
+      <p id="d-notas" class="detail-notes"></p>
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn btn-primary" id="btn-edit-order">Editar pedido</button>
+      <button class="btn btn-soft" id="btn-toggle-paid">Marcar como pagado</button>
+      <button class="btn btn-ghost" id="btn-toggle-status"></button>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-ajustes">
+  <section class="view-pad">
+    <h2 class="form-section-title">Información del negocio</h2>
+    <form id="settings-form">
+      <label class="field">
+        <span>Nombre del negocio</span>
+        <input type="text" id="s-nombre" name="nombreNegocio">
+      </label>
+      <label class="field">
+        <span>Nombre de la propietaria</span>
+        <input type="text" id="s-propietaria" name="propietaria">
+      </label>
+      <label class="field">
+        <span>Teléfono de contacto</span>
+        <input type="tel" id="s-telefono" name="telefonoNegocio" inputmode="tel">
+      </label>
+      <label class="field">
+        <span>Dirección / zona de entrega</span>
+        <input type="text" id="s-direccion" name="direccionNegocio">
+      </label>
+      <label class="field">
+        <span>Instagram / redes sociales</span>
+        <input type="text" id="s-redes" name="redesNegocio" placeholder="@sandlicias.reposteria">
+      </label>
+      <button type="submit" class="btn btn-primary">Guardar información</button>
+    </form>
+
+    <h2 class="form-section-title">Apariencia</h2>
+    <p class="settings-hint">Elige el tono que más te guste para resaltar tarjetas y botones.</p>
+    <div class="theme-row" id="theme-row">
+      <button type="button" class="theme-dot theme-dot-rosa" data-theme="rosa" aria-label="Rosa clásico"></button>
+      <button type="button" class="theme-dot theme-dot-durazno" data-theme="durazno" aria-label="Durazno suave"></button>
+      <button type="button" class="theme-dot theme-dot-lavanda" data-theme="lavanda" aria-label="Lavanda"></button>
+      <button type="button" class="theme-dot theme-dot-menta" data-theme="menta" aria-label="Menta"></button>
+    </div>
+
+    <h2 class="form-section-title">Respaldo de datos</h2>
+    <p class="settings-hint">Tus pedidos se guardan en este dispositivo. Crea respaldos con regularidad para no perder información.</p>
+    <div class="settings-actions">
+      <button type="button" class="btn btn-soft" id="btn-export">⬇️ Exportar respaldo</button>
+      <label class="btn btn-soft btn-file">
+        ⬆️ Restaurar respaldo
+        <input type="file" id="btn-import" accept="application/json" hidden>
+      </label>
+    </div>
+
+    <h2 class="form-section-title">Acerca de</h2>
+    <p class="settings-hint">Sand'licias · Gestor de pedidos v1.0<br>Hecho con cariño para endulzar tu día a día.</p>
+  </section>
+</template>
+
+<!-- Reusable order card template -->
+<template id="tpl-order-card">
+  <button class="order-card" type="button">
+    <div class="order-card-top">
+      <span class="urgency-pill"><i class="dot"></i><b class="urgency-text"></b></span>
+      <span class="badge badge-type"></span>
+    </div>
+    <h3 class="order-card-name"></h3>
+    <p class="order-card-meta"></p>
+    <div class="order-card-bottom">
+      <span class="order-card-date"></span>
+      <span class="badge badge-pago"></span>
+    </div>
+  </button>
+</template>
+
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

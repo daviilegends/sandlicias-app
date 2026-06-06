@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="38%" cy="32%" r="80%">
+      <stop offset="0%" stop-color="#FFE3EE"/>
+      <stop offset="55%" stop-color="#F7B8D2"/>
+      <stop offset="100%" stop-color="#E8A0BE"/>
+    </radialGradient>
+    <linearGradient id="cup" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FBEFF4"/>
+    </linearGradient>
+    <linearGradient id="swirl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8617A"/>
+      <stop offset="100%" stop-color="#8C4A66"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background circle -->
+  <circle cx="256" cy="256" r="248" fill="url(#bg)"/>
+  <!-- soft inner ring -->
+  <circle cx="256" cy="256" r="222" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2"/>
+  <!-- dotted frame -->
+  <circle cx="256" cy="256" r="234" fill="none" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+
+  <!-- decorative blossom accents -->
+  <g opacity="0.5" fill="#FFFFFF">
+    <circle cx="116" cy="146" r="5"/>
+    <circle cx="100" cy="164" r="3.4"/>
+    <circle cx="396" cy="118" r="4.4"/>
+    <circle cx="412" cy="138" r="2.8"/>
+    <circle cx="138" cy="382" r="4"/>
+    <circle cx="386" cy="372" r="5.2"/>
+  </g>
+
+  <!-- cupcake liner / base -->
+  <path d="M196 318
+           C196 308 204 300 214 300
+           L298 300
+           C308 300 316 308 316 318
+           L304 392
+           C303 404 293 412 281 412
+           L231 412
+           C219 412 209 404 208 392
+           Z"
+        fill="url(#cup)" stroke="#A8617A" stroke-width="5" stroke-linejoin="round"/>
+  <!-- liner pleats -->
+  <g stroke="#D79CB3" stroke-width="3.5" stroke-linecap="round" opacity="0.8">
+    <path d="M222 312 L218 404"/>
+    <path d="M250 308 L248 408"/>
+    <path d="M278 308 L282 408"/>
+    <path d="M302 312 L296 404"/>
+  </g>
+
+  <!-- frosting swirl (cupcake top) -->
+  <path d="M180 300
+           C170 268 188 244 218 240
+           C206 224 214 200 240 196
+           C236 176 256 158 282 168
+           C300 150 332 158 338 186
+           C362 192 372 218 356 240
+           C374 256 372 286 348 300
+           Z"
+        fill="url(#cup)" stroke="#A8617A" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- swirl ribbon rising as steam / flourish -->
+  <path d="M256 196
+           C244 170 258 150 280 152
+           C268 138 276 116 300 116
+           C292 100 304 80 328 84
+           C322 70 336 56 354 64
+           C368 70 370 90 356 100"
+        fill="none" stroke="url(#swirl)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="356" cy="100" r="7" fill="url(#swirl)"/>
+
+  <!-- little heart accents on frosting -->
+  <g fill="#E98AAE">
+    <path d="M226 224c-3-5-11-5-13 1-2 6 4 11 13 18 9-7 15-12 13-18-2-6-10-6-13-1z"/>
+    <path d="M298 206c-3-5-10-5-12 1-2 6 4 10 12 17 8-7 14-11 12-17-2-6-9-6-12-1z"/>
+  </g>
+</svg>
